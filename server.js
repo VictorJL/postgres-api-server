@@ -50,6 +50,7 @@ const corsOptions = {
 }
 app.use(helmet())
 app.use(cors())
+app.options('*', cors())
 app.use(bodyParser.json())
 app.use(morgan('combined')) // use 'tiny' or 'combined'
 
