@@ -11,24 +11,24 @@ const cors = require('cors')  // allows/disallows cross-site communication
 const morgan = require('morgan') // logs requests
 
 // db Connection w/ Heroku
-// const db = require('knex')({
-//   client: 'pg',
-//   connection: {
-//     connectionString: process.env.DATABASE_URL,
-//     ssl: true,
-//   }
-// });
+const db = require('knex')({
+   client: 'pg',
+   connection: {
+     connectionString: process.env.DATABASE_URL,
+     ssl: true,
+   }
+});
 
 // db Connection w/ localhost
-var db = require('knex')({
+/*var db = require('knex')({
   client: 'pg',
   connection: {
     host : '127.0.0.1',
-    user : '',
-    password : '',
+    user : 'postgres',
+    password : 'postgres',
     database : 'crud-starter-api'
   }
-});
+});*/
 
 // Controllers - aka, the db queries
 const main = require('./controllers/main')
@@ -37,7 +37,7 @@ const main = require('./controllers/main')
 const app = express()
 
 // App Middleware
-const whitelist = ['http://localhost:3001']
+const whitelist = ['http://localhost:5000']
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1 || !origin) {
@@ -48,7 +48,7 @@ const corsOptions = {
   }
 }
 app.use(helmet())
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan('combined')) // use 'tiny' or 'combined'
 
@@ -60,6 +60,6 @@ app.put('/crud', (req, res) => main.putTableData(req, res, db))
 app.delete('/crud', (req, res) => main.deleteTableData(req, res, db))
 
 // App Server Connection
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`app is running on port ${process.env.PORT || 3000}`)
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`app is running on port ${process.env.PORT || 5000}`)
 })
