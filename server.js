@@ -54,12 +54,7 @@ app.options('*', cors())
 app.use(bodyParser.json())
 app.use(morgan('combined')) // use 'tiny' or 'combined'
 
-// App Routes - Auth
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
+
 app.get('/', (req, res) => res.send('hello world'))
 app.get('/crud', (req, res) => main.getTableData(req, res, db))
 app.post('/crud', (req, res) => main.postTableData(req, res, db))
