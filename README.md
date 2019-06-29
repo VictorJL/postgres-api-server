@@ -5,7 +5,7 @@ Built on top of express using nodejs.
 Git clone and do:
 
 ```
-npm init
+npm install
 npm start
 ```
 
