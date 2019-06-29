@@ -69,7 +69,7 @@ const postTasksTableData = (req, res, db) => {
     })
 }
 
-const putUsersTableData = (req, res, db) => {
+const putTasksTableData = (req, res, db) => {
   const { id, name, action } = req.body
   db('Tasks').where({id}).update({first, last, email, phone, location, hobby})
     .returning('*')
