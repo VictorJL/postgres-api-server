@@ -1,5 +1,13 @@
-# postgres-api-server
-Postgres api server
+# postgres-api-server A CRUD Server with Postgres integration
+
+Built on top of express using nodejs.
+
+Git clone and do:
+
+```
+npm init
+npm start
+```
 
 Don't forget to add the tables to the database first with:
 
