@@ -11,17 +11,17 @@ const cors = require('cors')  // allows/disallows cross-site communication
 const morgan = require('morgan') // logs requests
 
 // db Connection w/ Heroku
-const db = require('knex')({
+/*const db = require('knex')({
    client: 'pg',
    connection: {
      connectionString: process.env.DATABASE_URL || 
      "postgres://gjqlhvnhleneub:dd5149eb82a5b15ad13719f5a237e402d50e9d23e7c8ac72daf918f9381d22b6@ec2-54-204-35-248.compute-1.amazonaws.com:5432/d7mtiics2ervga",
      ssl: true,
    }
-});
+});*/
 
 // db Connection w/ localhost
-/*var db = require('knex')({
+var db = require('knex')({
   client: 'pg',
   connection: {
     host : '127.0.0.1',
@@ -29,7 +29,7 @@ const db = require('knex')({
     password : 'postgres',
     database : 'crud-starter-api'
   }
-});*/
+});
 
 // Controllers - aka, the db queries
 const main = require('./controllers/main')
@@ -56,10 +56,15 @@ app.use(morgan('combined')) // use 'tiny' or 'combined'
 
 
 app.get('/', (req, res) => res.send('hello world'))
-app.get('/crud', (req, res) => main.getTableData(req, res, db))
-app.post('/crud', (req, res) => main.postTableData(req, res, db))
-app.put('/crud', (req, res) => main.putTableData(req, res, db))
-app.delete('/crud', (req, res) => main.deleteTableData(req, res, db))
+app.get('/crud/users', (req, res) => main.getUsersTableData(req, res, db))
+app.post('/crud/users', (req, res) => main.postUsersTableData(req, res, db))
+app.put('/crud/users', (req, res) => main.putUsersTableData(req, res, db))
+app.delete('/crud/users', (req, res) => main.deleteUsersTableData(req, res, db))
+
+app.get('/crud/tasks', (req, res) => main.getTasksTableData(req, res, db))
+app.post('/crud/tasks', (req, res) => main.postTasksTableData(req, res, db))
+app.put('/crud/tasks', (req, res) => main.putTasksTableData(req, res, db))
+app.delete('/crud/tasks', (req, res) => main.deleteTasksTableData(req, res, db))
 
 // App Server Connection
 app.listen(process.env.PORT || 5000, () => {

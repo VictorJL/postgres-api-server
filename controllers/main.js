@@ -1,5 +1,5 @@
-const getTableData = (req, res, db) => {
-  db.select('*').from('testtable1')
+const getUsersTableData = (req, res, db) => {
+  db.select('*').from('Users')
     .then(items => {
       if(items.length){
         res.json(items)
@@ -10,10 +10,10 @@ const getTableData = (req, res, db) => {
     .catch(err => res.status(400).json({dbError: 'db error'}))
 }
 
-const postTableData = (req, res, db) => {
+const postUsersTableData = (req, res, db) => {
   const { first, last, email, phone, location, hobby } = req.body
   const added = new Date()
-  db('testtable1').insert({first, last, email, phone, location, hobby, added})
+  db('Users').insert({first, last, email, phone, location, hobby, added})
     .returning('*')
     .then(item => {
       res.json(item)
@@ -24,9 +24,9 @@ const postTableData = (req, res, db) => {
     })
 }
 
-const putTableData = (req, res, db) => {
+const putUsersTableData = (req, res, db) => {
   const { id, first, last, email, phone, location, hobby } = req.body
-  db('testtable1').where({id}).update({first, last, email, phone, location, hobby})
+  db('Users').where({id}).update({first, last, email, phone, location, hobby})
     .returning('*')
     .then(item => {
       res.json(item)
@@ -34,18 +34,69 @@ const putTableData = (req, res, db) => {
     .catch(err => res.status(400).json({dbError: 'db error'}))
 }
 
-const deleteTableData = (req, res, db) => {
+const deleteUsersTableData = (req, res, db) => {
   const { id } = req.body
-  db('testtable1').where({id}).del()
+  db('Users').where({id}).del()
     .then(() => {
       res.json({delete: 'true'})
     })
     .catch(err => res.status(400).json({dbError: 'db error'}))
 }
 
+const getTasksTableData = (req, res, db) => {
+  db.select('*').from('Tasks')
+    .then(items => {
+      if(items.length){
+        res.json(items)
+      } else {
+        res.json({dataExists: 'false'})
+      }
+    })
+    .catch(err => res.status(400).json({dbError: 'db error'}))
+}
+
+const postTasksTableData = (req, res, db) => {
+  const { name, action } = req.body
+
+  db('Tasks').insert({name, action })
+    .returning('*')
+    .then(item => {
+      res.json(item)
+    })
+    .catch(function(err){
+      console.log(err);
+      res.status(400).json({dbError: 'db error'})
+    })
+}
+
+const putUsersTableData = (req, res, db) => {
+  const { id, name, action } = req.body
+  db('Tasks').where({id}).update({first, last, email, phone, location, hobby})
+    .returning('*')
+    .then(item => {
+      res.json(item)
+    })
+    .catch(err => res.status(400).json({dbError: 'db error'}))
+}
+
+const deleteTasksTableData = (req, res, db) => {
+  const { id } = req.body
+  db('Tasks').where({id}).del()
+    .then(() => {
+      res.json({delete: 'true'})
+    })
+    .catch(err => res.status(400).json({dbError: 'db error'}))
+}
+
+
 module.exports = {
-  getTableData,
-  postTableData,
-  putTableData,
-  deleteTableData
+  getUsersTableData,
+  postUsersTableData,
+  putUsersTableData,
+  deleteUsersTableData,
+
+  getTasksTableData,
+  postTasksTableData,
+  putTasksTableData,
+  deleteTasksTableData
 }
