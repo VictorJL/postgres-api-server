@@ -1,5 +1,5 @@
 const getUsersTableData = (req, res, db) => {
-  db.select('*').from('Users')
+  db.select('*').from('users')
     .then(items => {
       if(items.length){
         res.json(items)
@@ -13,7 +13,7 @@ const getUsersTableData = (req, res, db) => {
 const postUsersTableData = (req, res, db) => {
   const { first, last, email, phone, location, hobby } = req.body
   const added = new Date()
-  db('Users').insert({first, last, email, phone, location, hobby, added})
+  db('users').insert({first, last, email, phone, location, hobby, added})
     .returning('*')
     .then(item => {
       res.json(item)
@@ -26,7 +26,7 @@ const postUsersTableData = (req, res, db) => {
 
 const putUsersTableData = (req, res, db) => {
   const { id, first, last, email, phone, location, hobby } = req.body
-  db('Users').where({id}).update({first, last, email, phone, location, hobby})
+  db('users').where({id}).update({first, last, email, phone, location, hobby})
     .returning('*')
     .then(item => {
       res.json(item)
@@ -36,7 +36,7 @@ const putUsersTableData = (req, res, db) => {
 
 const deleteUsersTableData = (req, res, db) => {
   const { id } = req.body
-  db('Users').where({id}).del()
+  db('users').where({id}).del()
     .then(() => {
       res.json({delete: 'true'})
     })
@@ -44,7 +44,7 @@ const deleteUsersTableData = (req, res, db) => {
 }
 
 const getTasksTableData = (req, res, db) => {
-  db.select('*').from('Tasks')
+  db.select('*').from('tasks')
     .then(items => {
       if(items.length){
         res.json(items)
@@ -58,7 +58,7 @@ const getTasksTableData = (req, res, db) => {
 const postTasksTableData = (req, res, db) => {
   const { name, action } = req.body
 
-  db('Tasks').insert({name, action })
+  db('tasks').insert({name, action })
     .returning('*')
     .then(item => {
       res.json(item)
@@ -71,7 +71,7 @@ const postTasksTableData = (req, res, db) => {
 
 const putTasksTableData = (req, res, db) => {
   const { id, name, action } = req.body
-  db('Tasks').where({id}).update({first, last, email, phone, location, hobby})
+  db('tasks').where({id}).update({ name, action })
     .returning('*')
     .then(item => {
       res.json(item)
@@ -81,7 +81,7 @@ const putTasksTableData = (req, res, db) => {
 
 const deleteTasksTableData = (req, res, db) => {
   const { id } = req.body
-  db('Tasks').where({id}).del()
+  db('tasks').where({id}).del()
     .then(() => {
       res.json({delete: 'true'})
     })
