@@ -26,7 +26,7 @@ if(isProduction){
     });
 }
 
-const { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLNonNull, GraphQLList } = require('graphql')
+const { GraphQLSchema, GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt, GraphQLNonNull, GraphQLList } = require('graphql')
 
 //Define User type
 const userType = new GraphQLObjectType({
@@ -96,31 +96,54 @@ const mutation = new GraphQLObjectType({
     name: 'Mutation',
     type: 'Mutation',
     fields: {
-      addUser: {
-        type: userType,
-        args: {
-            first: { type: GraphQLString },
-            last: { type: GraphQLString },
-            email: { type: GraphQLString },
-            phone: { type: GraphQLString },
-            location: { type: GraphQLString },
-            hobby: { type: GraphQLString }
-        },
-        resolve: function(parentValue, args){
-            const { first, last, email, phone, location, hobby } = args;
-            const added = new Date();
-            return db('users').insert({first, last, email, phone, location, hobby, added})
-              .returning('*')
-              .then(item => {
-                  console.log(item);
-                  return item[0];
-                })
-              .catch(function(err){
-                console.log(err);
-                res.status(400).json({dbError: 'db error'})
-              });
-        }
-      }
+        addUser: {
+            type: userType,
+            args: {
+                first: { type: GraphQLString },
+                last: { type: GraphQLString },
+                email: { type: GraphQLString },
+                phone: { type: GraphQLString },
+                location: { type: GraphQLString },
+                hobby: { type: GraphQLString }
+            },
+            resolve: function(parentValue, args){
+                const { first, last, email, phone, location, hobby } = args;
+                const added = new Date();
+                return db('users').insert({first, last, email, phone, location, hobby, added})
+                  .returning('*')
+                  .then(item => {
+                      console.log(item);
+                      return item[0];
+                    })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+            }
+          },
+        editUser: {
+            type: userType,
+            args: {
+                id: { type: GraphQLID },
+                first: { type: GraphQLString },
+                last: { type: GraphQLString },
+                email: { type: GraphQLString },
+                phone: { type: GraphQLString },
+                location: { type: GraphQLString },
+                hobby: { type: GraphQLString }
+            },
+            resolve: function(parentValue, args){
+                const { id, first, last, email, phone, location, hobby } = args;
+                return   db('users').where({id}).update({first, last, email, phone, location, hobby})
+                  .returning('*')
+                  .then(item => {
+                      console.log(item);
+                      return item[0];
+                    })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+            }
+          }
     }
 });
 
