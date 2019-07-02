@@ -69,9 +69,8 @@ const userType = new GraphQLObjectType({
   }
 })
 
-//schema
-const schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
+// query
+const query = new GraphQLObjectType({
     name: 'Query',
     type: 'Query',
     fields: {
@@ -91,7 +90,44 @@ const schema = new GraphQLSchema({
         }
       }
     }
-  })
+});
+
+const mutation = new GraphQLObjectType({
+    name: 'Mutation',
+    type: 'Mutation',
+    fields: {
+      addUser: {
+        type: userType,
+        args: {
+            first: { type: GraphQLString },
+            last: { type: GraphQLString },
+            email: { type: GraphQLString },
+            phone: { type: GraphQLString },
+            location: { type: GraphQLString },
+            hobby: { type: GraphQLString }
+        },
+        resolve: function(parentValue, args){
+            const { first, last, email, phone, location, hobby } = args;
+            const added = new Date();
+            return db('users').insert({first, last, email, phone, location, hobby, added})
+              .returning('*')
+              .then(item => {
+                  console.log(item);
+                  return item[0];
+                })
+              .catch(function(err){
+                console.log(err);
+                res.status(400).json({dbError: 'db error'})
+              });
+        }
+      }
+    }
+});
+
+//schema
+const schema = new GraphQLSchema({
+  query: query,
+  mutation: mutation
 })
 
 module.exports = schema
