@@ -112,7 +112,6 @@ const mutation = new GraphQLObjectType({
                 return db('users').insert({first, last, email, phone, location, hobby, added})
                   .returning('*')
                   .then(item => {
-                      console.log(item);
                       return item[0];
                     })
                   .catch(function(err){
@@ -136,8 +135,33 @@ const mutation = new GraphQLObjectType({
                 return   db('users').where({id}).update({first, last, email, phone, location, hobby})
                   .returning('*')
                   .then(item => {
-                      console.log(item);
                       return item[0];
+                    })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+            }
+          },
+          deleteUser: {
+            type: userType,
+            args: {
+                id: { type: GraphQLID }
+            },
+            resolve: function(parentValue, args){
+                const { id } = args;
+                return   db('users').where({id}).del()
+                  .then(() => {
+                        let item = {};
+                        item.id = id;
+                        item.first = "";
+                        item.last = "";
+                        item.email = "";
+                        item.phone = "";
+                        item.location = "";
+                        item.hobby = "";
+                        item.added = "";
+                        
+                      return item;
                     })
                   .catch(function(err){
                     console.log(err);
